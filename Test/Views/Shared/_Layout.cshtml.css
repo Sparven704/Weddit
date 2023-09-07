@@ -7,6 +7,7 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+.header 
 a {
   color: #0077cc;
 }
@@ -46,3 +47,20 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+/* _Header.cshtml css*/
+header #header {
+    background-color: #000f;
+    color: white; 
+    padding: 10px; 
+}
+
+header  #header ul {
+        list-style: none;
+        padding: 0; 
+        display: flex; 
+    }
+
+header #header li {
+        margin-right: 20px; 
+    }
