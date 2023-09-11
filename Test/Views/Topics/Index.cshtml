@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome To Weddit</h1>
+    <p>A forum website for people who struggle to pronounce R correctly</a>.</p>
+</div>
+
+<table class="table">
+    <tbody>
+        @foreach (var topic in Model)
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("Posts", "Topics", new { id = topic.Id })">@topic.Name</a>
+                </td>
+                <td>@topic.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
