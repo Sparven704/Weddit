@@ -1,8 +1,9 @@
 ﻿using GroupProj1Weddit.Models;
-using GroupProj1Weddit.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Security.Claims;
 using Test.Data;
 using Test.Models;
 
@@ -19,11 +20,13 @@ namespace Test.Controllers
             _context = context;
         }
 
+
         public IActionResult Index()
         {
             List<Topic> topics = _context.Topics.ToList();
             return View(topics);
         }
+
 
         public IActionResult Posts(int id)
         {
@@ -47,7 +50,7 @@ namespace Test.Controllers
 
             // Create a new Post and associate it with the topic
             var post = new Post();
-            post.Topic = topic;
+            post.TopicId = topic.Id;
 
             return View(post);
         }
@@ -63,11 +66,11 @@ namespace Test.Controllers
                 _context.SaveChanges();
 
                 // Redirect back to the "Posts" view for the same topic
-                return RedirectToAction("Posts", new { id = post.Topic.Id });
-            }
+                return RedirectToAction("Posts", new { id = post.TopicId });
+            } 
             
             // If validation fails, return the view with validation errors
-            return View("Index");
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
