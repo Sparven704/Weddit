@@ -1,7 +1,7 @@
 ﻿@using GroupProj1Weddit.Models;
 @using System.Security.Claims;
 @model GroupProj1Weddit.Models.Post;
-using Microsoft.AspNetCore.Identity;
+@using Microsoft.AspNetCore.Identity;
 
 @{
     ViewData["Title"] = "CreatePost";
@@ -18,10 +18,10 @@ using Microsoft.AspNetCore.Identity;
 <!-- Form for creating a new post (initially hidden) -->
 <form id="createPostForm" asp-controller="Topics" asp-action="CreatePost" method="post" style="display:none;">
     <input type="hidden" asp-for="TopicId" value="@Model.TopicId" />
-    <input type="hidden" asp-for="User.Id" value="@User.FindFirstValue(ClaimTypes.NameIdentifier) />
+    <input type="hidden" asp-for="UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
 
-   
- <div class="form-group">
+
+    <div class="form-group">
         <label for="Title">Title</label>
         <input type="text" id="Title" name="Title" class="form-control" />
     </div>

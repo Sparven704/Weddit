@@ -1,5 +1,17 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model GroupProj1Weddit.Models.Post;
+
+<ul>
+	@foreach (var comment in Model.Comments)
+	{
+	  <li>@comment.Content</li>	
+	}
+</ul>
+
+<button id="ToCreateComment" class="btn btn-primary" onclick="redirectToCreateComment(@Model.Id)">Go to create Comment</button>
+
+<script>
+	function redirectToCreateComment(postId) {
+		var url = '@Url.Action("CreateComment", "Topics")' + '?id=' + postId;
+		window.location.href = url;
+	}
+</script>

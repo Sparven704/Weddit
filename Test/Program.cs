@@ -11,7 +11,7 @@ namespace Test
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString") ?? throw new InvalidOperationException("Connection string 'ArvidConnection' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("ArvidConnection") ?? throw new InvalidOperationException("Connection string 'ArvidConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();

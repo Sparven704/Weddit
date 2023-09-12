@@ -27,7 +27,7 @@ namespace Test.Controllers
             return View(topics);
         }
 
-
+       
         public IActionResult Posts(int id)
         {
             var topic = _context.Topics.Include(t => t.Posts).FirstOrDefault(t => t.Id == id);
@@ -39,7 +39,18 @@ namespace Test.Controllers
             return View(topic);
         }
 
-        public IActionResult CreatePost(int id)
+		public IActionResult Comments(int id)
+		{
+			var post = _context.Posts.Include(p => p.Comments).FirstOrDefault(p => p.Id == id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            return View(post);
+		}
+
+		public IActionResult CreatePost(int id)
         {
             // Retrieve the topic based on the id parameter
             var topic = _context.Topics.FirstOrDefault(t => t.Id == id);
@@ -51,16 +62,17 @@ namespace Test.Controllers
             // Create a new Post and associate it with the topic
             var post = new Post();
             post.TopicId = topic.Id;
-
+            // Assign the user ID to the post
+            //post.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View(post);
         }
 
         [HttpPost]
         public IActionResult CreatePost(Post post)
         {
+            Console.WriteLine();
             if (ModelState.IsValid)
             {
-
                 // Save the post to the database
                 _context.Posts.Add(post);
                 _context.SaveChanges();
@@ -69,6 +81,39 @@ namespace Test.Controllers
                 return RedirectToAction("Posts", new { id = post.TopicId });
             } 
             
+            // If validation fails, return the view with validation errors
+            return RedirectToAction("Index");
+        }
+        public IActionResult CreateComment(int id)
+        {
+            // Retrieve the post based on the id parameter
+            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            // Create a new Comment and associate it with the post
+            var comment = new Comment();
+            comment.PostId = post.Id;
+          
+            return View(comment);
+        }
+
+        [HttpPost]
+        public IActionResult CreateComment(Comment comment)
+        {
+            Console.WriteLine();
+            if (ModelState.IsValid)
+            {
+                // Save the comment to the database
+                _context.Comments.Add(comment);
+                _context.SaveChanges();
+
+                // Redirect back to the "Comments" view for the same post
+                return RedirectToAction("Comments", new { id = comment.PostId });
+            }
+
             // If validation fails, return the view with validation errors
             return RedirectToAction("Index");
         }
