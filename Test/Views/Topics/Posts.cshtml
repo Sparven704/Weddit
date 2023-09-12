@@ -8,12 +8,6 @@
 <p>@Model.Description</p>
 
 <h3>Posts in this Topic</h3>
-<@*ul>
-    @foreach (var post in Model.Posts)
-    {
-        <li>@post.Title</li>
-    }
-</ul>*@
 
 <button id="ToCreatePost" class="btn btn-primary" onclick="redirectToCreatePost(@Model.Id)">Go to create post</button>
 
