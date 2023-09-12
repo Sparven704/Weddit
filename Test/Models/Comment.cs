@@ -10,13 +10,8 @@ namespace GroupProj1Weddit.Models
         public DateTime CommentTime { get; set; }
 
 
-        //public virtual IdentityUser User { get; set; }
-        //public virtual Post Post { get; set; }
-        [ForeignKey("AspNetUsers")]
-        public string UserId { get; set; }
-        //public virtual IdentityUser User { get; set; }
-
-        [ForeignKey("Post")]
-        public int PostId { get; set; }
+        public virtual IdentityUser User { get; set; }
+        public virtual Post Post { get; set; }
+        
     }
 }

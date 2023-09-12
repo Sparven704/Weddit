@@ -10,12 +10,9 @@ namespace GroupProj1Weddit.Models
         public string Description { get; set; }
         public DateTime PostTime { get; set; } = DateTime.Now;
         
-        [ForeignKey("AspNetUsers")]      
-        public string UserId { get; set; }
-        //public virtual IdentityUser User { get; set; }
-
-        [ForeignKey("Topic")]
-        public int TopicId { get; set; }
+        
+        public virtual IdentityUser User { get; set; }
+        public virtual Topic Topic { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }
 
     }
