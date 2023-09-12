@@ -1,0 +1,25 @@
+﻿@using GroupProj1Weddit.Models;
+@model GroupProj1Weddit.Models.Topic
+@{
+    ViewData["Title"] = "Posts";
+}
+
+<h2>@Model.Name</h2>
+<p>@Model.Description</p>
+
+<h3>Posts in this Topic</h3>
+<@*ul>
+    @foreach (var post in Model.Posts)
+    {
+        <li>@post.Title</li>
+    }
+</ul>*@
+
+<button id="ToCreatePost" class="btn btn-primary" onclick="redirectToCreatePost(@Model.Id)">Go to create post</button>
+
+<script>
+function redirectToCreatePost(topicId) {
+    var url = '@Url.Action("CreatePost", "Topics")' + '?id=' + topicId;
+    window.location.href = url;
+}
+</script>
