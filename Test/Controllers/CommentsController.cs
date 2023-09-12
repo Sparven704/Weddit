@@ -1,4 +1,6 @@
 ﻿using GroupProj1Weddit.Models;
+using GroupProj1Weddit.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -10,13 +12,13 @@ namespace GroupProj1Weddit.Controllers
 {
     public class CommentsController : Controller
     {
-        private readonly ILogger<CommentsController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public CommentsController(ILogger<CommentsController> logger, ApplicationDbContext context)
+        public CommentsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
-            _logger = logger;
             _context = context;
+            _userManager = userManager;
         }
         public IActionResult Index(int id)
         {
@@ -38,35 +40,43 @@ namespace GroupProj1Weddit.Controllers
                 return NotFound();
             }
 
-            // Create a new Comment and associate it with the post
-            var comment = new Comment();
-            comment.PostId = post.Id;
+            var commentViewModel = new CommentViewModel
+            {
+                PostId = post.Id
+            };
 
-            return View(comment);
+            return View(commentViewModel);
         }
 
         [HttpPost]
-        public IActionResult CreateComment(Comment comment)
+        public IActionResult CreateComment(CommentViewModel commentViewModel)
         {
-            Console.WriteLine();
             if (ModelState.IsValid)
             {
-                // Save the comment to the database
-                _context.Comments.Add(comment);
-                _context.SaveChanges();
+                var user = _userManager.GetUserAsync(User).Result;
+                if (user != null)
+                {
+                    var post = _context.Posts.FirstOrDefault(p => p.Id == commentViewModel.PostId);
 
-                // Redirect back to the "Comments" view for the same post
-                return RedirectToAction("Index", new { id = comment.PostId });
+                    if (post != null)
+                    {
+                        var comment = new Comment
+                        {
+                            Content = commentViewModel.Content,
+                            CommentTime = DateTime.Now,
+                            User = user,
+                        };
+
+                        post.Comments.Add(comment); // Associate the comment with the post
+
+                        _context.SaveChanges();
+
+                        return RedirectToAction("Index", new { id = commentViewModel.PostId });
+                    }
+                }
             }
 
-            // If validation fails, return the view with validation errors
-            return RedirectToAction("Index");
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(commentViewModel);
         }
     }
 }

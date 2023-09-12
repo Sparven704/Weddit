@@ -1,7 +1,5 @@
-﻿@using GroupProj1Weddit.Models;
+﻿@model GroupProj1Weddit.Models.ViewModels.CommentViewModel;
 @using System.Security.Claims;
-@model GroupProj1Weddit.Models.Comment;
-@using Microsoft.AspNetCore.Identity;
 
 @{
     ViewData["Title"] = "CreateComment";
@@ -15,16 +13,17 @@
 <!-- Button to toggle the visibility of the "Create Post" form -->
 <button id="toggleCreateCommentForm" class="btn btn-primary">Post a Comment</button>
 
-<!-- Form for creating a new post (initially hidden) -->
-<form id="createCommentForm" asp-controller="Topics" asp-action="CreateComment" method="post" style="display:none;">
+<!-- Form for creating a new comment (initially hidden) -->
+<form id="createCommentForm" asp-controller="Comments" asp-action="CreateComment" method="post" style="display:none;">
     <input type="hidden" asp-for="PostId" value="@Model.PostId" />
-    <input type="hidden" asp-for="UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+    @*<input type="hidden" asp-for="UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />*@
 
     <div class="form-group">
         <label for="Content">Comment..</label>
-        <textarea id="Content" name="Content" class="form-control"></textarea>
+        <textarea id="Content" name="Content" class="form-control" asp-for="Content"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
     </div>
-    <!-- Add other form fields as needed for your Post model -->
+    <!-- Add other form fields as needed for your CommentViewModel -->
     <button type="submit" class="btn btn-primary">Post Comment</button>
 </form>
 

@@ -1,23 +1,25 @@
 ﻿using GroupProj1Weddit.Models;
+using GroupProj1Weddit.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using Test.Controllers;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Test.Data;
-using Test.Models;
 
 namespace GroupProj1Weddit.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly ILogger<PostsController> _logger;
+        
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public PostsController(ILogger<PostsController> logger, ApplicationDbContext context)
+        public PostsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
-            _logger = logger;
             _context = context;
+            _userManager = userManager;
         }
+
         public IActionResult Index(int id)
         {
             var topic = _context.Topics.Include(t => t.Posts).FirstOrDefault(t => t.Id == id);
@@ -26,48 +28,73 @@ namespace GroupProj1Weddit.Controllers
                 return NotFound();
             }
 
-            return View(topic);
+            // Map Topic to PostViewModel
+            var postViewModels = topic.Posts.Select(post => new PostViewModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Description = post.Description,
+                PostTime = post.PostTime,
+ 
+            }).ToList();
+
+            return View(postViewModels);
         }
 
         public IActionResult CreatePost(int id)
         {
-            // Retrieve the topic based on the id parameter
             var topic = _context.Topics.FirstOrDefault(t => t.Id == id);
             if (topic == null)
             {
                 return NotFound();
             }
 
-            // Create a new Post and associate it with the topic
-            var post = new Post();
-            post.TopicId = topic.Id;
-            // Assign the user ID to the post
-            //post.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View(post);
+            var createPostViewModel = new CreatePostViewModel
+            {
+                TopicId = topic.Id
+            };
+
+            return View(createPostViewModel);
         }
 
         [HttpPost]
-        public IActionResult CreatePost(Post post)
+        public IActionResult CreatePost(CreatePostViewModel createPostViewModel)
         {
-            Console.WriteLine();
             if (ModelState.IsValid)
             {
-                // Save the post to the database
-                _context.Posts.Add(post);
-                _context.SaveChanges();
+                var user = _userManager.GetUserAsync(User).Result; // Retrieve current user
+                if (user != null)
+                {
+                    // Map CreatePostViewModel to Post
+                    var post = new Post
+                    {
+                        Title = createPostViewModel.Title,
+                        Description = createPostViewModel.Description,
+                        PostTime = DateTime.Now,
+                        User = user,
+                    };
 
-                // Redirect back to the "Posts" view for the same topic
-                return RedirectToAction("Index", new { id = post.TopicId });
+                    // Set the TopicId based on the selected topic
+                    if (createPostViewModel.TopicId > 0) // Check if a valid TopicId is provided
+                    {
+                        // Retrieve the Topic from the database based on the provided TopicId
+                        var topic = _context.Topics.Find(createPostViewModel.TopicId);
+
+                        if (topic != null)
+                        {
+                            post.Topic = topic;
+                        }
+                    }
+
+                    // Save the post to the database
+                    _context.Posts.Add(post);
+                    _context.SaveChanges();
+
+       
+                    return RedirectToAction("Index", new { id = post.Topic.Id });
+                }
             }
-
-            // If validation fails, return the view with validation errors
-            return RedirectToAction("Index");
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(createPostViewModel);
         }
 
     }

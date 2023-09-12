@@ -1,4 +1,5 @@
 ﻿using GroupProj1Weddit.Models;
+using GroupProj1Weddit.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,8 +24,17 @@ namespace Test.Controllers
 
         public IActionResult Index()
         {
-            List<Topic> topics = _context.Topics.ToList();
-            return View(topics);
+            List<TopicViewModel> topicViewModels = _context.Topics
+            .Select(topic => new TopicViewModel
+            {
+                Id = topic.Id,
+                Name = topic.Name,
+                Description = topic.Description,
+                Posts = topic.Posts
+            })
+            .ToList();
+
+            return View(topicViewModels);
         }
 		
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
