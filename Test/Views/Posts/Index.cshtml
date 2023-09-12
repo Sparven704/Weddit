@@ -16,7 +16,7 @@
         {
             <tr>
                 <td>
-                    <a href="@Url.Action("Comments", "Topics", new { id = post.Id })">@post.Title</a>
+                    <a href="@Url.Action("Index", "Comments", new { id = post.Id })">@post.Title</a>
                 </td>
             </tr>
         }
@@ -27,7 +27,7 @@
 
 <script>
     function redirectToCreatePost(topicId) {
-        var url = '@Url.Action("CreatePost", "Topics")' + '?id=' + topicId;
+        var url = '@Url.Action("CreatePost", "Posts")' + '?id=' + topicId;
         window.location.href = url;
 }
 </script>

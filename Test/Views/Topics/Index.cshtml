@@ -4,7 +4,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome To Weddit</h1>
-    <p>A forum website for people who struggle to pronounce R correctly</a>.</p>
+    <p>A forum website for people who struggle to pronounce R correctly.</p>
 </div>
 
 <table class="table">
@@ -13,7 +13,7 @@
         {
             <tr>
                 <td>
-                    <a href="@Url.Action("Posts", "Topics", new { id = topic.Id })">@topic.Name</a>
+                    <a href="@Url.Action("Index", "Posts", new { id = topic.Id })">@topic.Name</a>
                 </td>
                 <td>@topic.Description</td>
             </tr>
