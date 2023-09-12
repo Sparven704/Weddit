@@ -1,15 +1,17 @@
 ﻿@using GroupProj1Weddit.Models;
 @using System.Security.Claims;
-@model GroupProj1Weddit.Models.Post;
+@model GroupProj1Weddit.Models.ViewModels.CreatePostViewModel //Uppdaterad så den tar rätt model
 @using Microsoft.AspNetCore.Identity;
 
 @{
     ViewData["Title"] = "CreatePost";
 }
-
+@{
+    int someVariable = (int)ViewBag.SomeVariable;
+}
 <h1>Create Post here</h1>
 
-<a href="@Url.Action("Posts", "Topics", new { id = Model.Id})" class="btn btn-primary">Return to Posts</a>
+<a href="@Url.Action("Index", "Posts", new { id = ViewBag.someVariable})" class="btn btn-primary">Return to Posts</a>
  
 
 <!-- Button to toggle the visibility of the "Create Post" form -->

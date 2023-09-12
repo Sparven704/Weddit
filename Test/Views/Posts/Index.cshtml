@@ -1,33 +1,41 @@
 ﻿@using GroupProj1Weddit.Models.ViewModels;
-@model TopicViewModel;
+@model List<PostViewModel> // skickade fel typ av model, ska vara list ej topic model
 @{
     ViewData["Title"] = "Posts";
 }
+@{
+    int someVariable = (int)ViewBag.SomeVariable;
+}
 
-<h2>@Model.Name</h2>
-<p>@Model.Description</p>
+<h2>Posts in this topic</h2>
 
-<h3>Posts in this Topic</h3>
+@if (Model.Any())
+{
+    <table class="table">
+        <tbody>
+            @foreach (var post in Model)
+            {
+                <tr>
+                    <td>
+                        <a href="@Url.Action("Index", "Comments", new { id = post.Id })">@post.Title</a> @* Om listan är tom är post.Id null och ger error *@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
+    <button id="ToCreatePost" class="btn btn-primary" onclick="redirectToCreatePost(@Model.First().TopicId)">Go to create post</button>
+}
+else
+{
+    <p>No posts available.</p> //If satsen kommer runt det, men går inte att skapa ny post för topicen utan topcId
+    <button id="ToCreatePost" class="btn btn-primary" onclick="redirectToCreatePost(@ViewBag.SomeVariable)">Go to create post</button>
 
-<table class="table">
-    <tbody>
-        @foreach (var post in Model.Posts)
-        {
-            <tr>
-                <td>
-                    <a href="@Url.Action("Index", "Comments", new { id = post.Id })">@post.Title</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<button id="ToCreatePost" class="btn btn-primary" onclick="redirectToCreatePost(@Model.Id)">Go to create post</button>
+}
 
 <script>
-    function redirectToCreatePost(topicId) {
-        var url = '@Url.Action("CreatePost", "Posts")' + '?id=' + topicId;
+    function redirectToCreatePost(TopicId) {
+        var url = '@Url.Action("CreatePost", "Posts")' + '?id=' + TopicId;
         window.location.href = url;
-}
+    }
 </script>

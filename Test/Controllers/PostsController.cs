@@ -38,6 +38,8 @@ namespace GroupProj1Weddit.Controllers
  
             }).ToList();
 
+            ViewBag.SomeVariable = id;
+
             return View(postViewModels);
         }
 
@@ -53,6 +55,8 @@ namespace GroupProj1Weddit.Controllers
             {
                 TopicId = topic.Id
             };
+
+            ViewBag.SomeVariable = id;
 
             return View(createPostViewModel);
         }

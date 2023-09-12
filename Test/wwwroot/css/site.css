@@ -16,3 +16,36 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+h2 {
+    color:red;
+}
+a {
+    text-decoration: none;
+    color: #0079d3;
+    transition: color 0.2s; 
+}
+
+    a:visited {
+        color: #551a8b; 
+    }
+
+    /* Apply styles on hover */
+    a:hover {
+        color: #ff6a00; 
+        text-decoration: underline; 
+    }
+
+h1 {
+    color: white;
+}
+#WelcomeDescription {
+    color: white;
+}
+
+#topic-description {
+    color:white;
+}
+p {
+    color: white;
+}
