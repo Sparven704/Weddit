@@ -22,12 +22,15 @@ namespace GroupProj1Weddit.Controllers
         }
 		public IActionResult Index(int id)
 		{
+            // Retrieves post with matching id and loads in all associated comments to memory
 			var post = _context.Posts.Include(p => p.Comments).FirstOrDefault(p => p.Id == id);
 			if (post == null)
 			{
 				return NotFound();
 			}
-            var user = _userManager.GetUserAsync(User).Result;
+
+            var user = _userManager.GetUserAsync(User).Result; // Retrieve current user
+
             // Create a list of CommentViewModel objects
             var commentViewModels = post.Comments.Select(comment => new CommentViewModel
 			{ 
@@ -47,7 +50,7 @@ namespace GroupProj1Weddit.Controllers
 
 		public IActionResult CreateComment(int id)
         {
-            // Retrieve the post based on the id parameter
+            // Retrieve the post based on the id
             var post = _context.Posts.FirstOrDefault(p => p.Id == id);
             if (post == null)
             {
@@ -75,6 +78,7 @@ namespace GroupProj1Weddit.Controllers
 
                     if (post != null)
                     {
+                        // Maps ViewModel to model
                         var comment = new Comment
                         {
                             Content = createCommentViewModel.Content,
@@ -82,7 +86,7 @@ namespace GroupProj1Weddit.Controllers
                             User = user,
                             PostId = createCommentViewModel.PostId
                         };
-
+                        // Save the Comment to the database
                         _context.Comments.Add(comment);
                         _context.SaveChanges();
 

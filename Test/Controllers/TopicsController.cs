@@ -20,6 +20,7 @@ namespace Test.Controllers
 
         public IActionResult Index()
         {
+            // Maps ViewModel to model
             List<TopicViewModel> topicViewModels = _context.Topics.Select(topic => new TopicViewModel
            {
                Id = topic.Id,

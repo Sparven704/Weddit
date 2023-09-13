@@ -23,6 +23,7 @@ namespace GroupProj1Weddit.Controllers
 
         public IActionResult Index(int id)
         {
+            // Retrieves topics with matching id and loads in all associated posts to memory
             var topic = _context.Topics.Include(t => t.Posts).FirstOrDefault(t => t.Id == id);
 
             if (topic == null)

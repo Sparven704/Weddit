@@ -8,11 +8,14 @@
 
 <h1>Post a Comment here</h1>
 
+@*--Button to bring the user back to selected post--*@
 <a href="@Url.Action("Index", "Comments", new { id = @Model.PostId})" class="btn btn-primary">Return to Comments</a>
 
+
+@*--Form for creating a new comment on selected post--*@
 <form id="createCommentForm" asp-controller="Comments" asp-action="CreateComment" method="post" style="display:block;">
     <input type="hidden" asp-for="PostId" value="@Model.PostId" />
-    @*<input type="hidden" asp-for="UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />*@
+    
     <div class="form-group">
         <label for="Content">Comment..</label>
         <textarea id="Content" name="Content" class="form-control" asp-for="Content"></textarea>
