@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Test.Data;
+using Microsoft.Extensions.Hosting;
 
 namespace GroupProj1Weddit.Controllers
 {
@@ -23,24 +24,23 @@ namespace GroupProj1Weddit.Controllers
         public IActionResult Index(int id)
         {
             var topic = _context.Topics.Include(t => t.Posts).FirstOrDefault(t => t.Id == id);
+
             if (topic == null)
             {
                 return NotFound();
             }
 
-            // Map Topic to PostViewModel
-            var postViewModels = topic.Posts.Select(post => new PostViewModel
+            var topicViewModel = new TopicViewModel
             {
-                Id = post.Id,
-                Title = post.Title,
-                Description = post.Description,
-                PostTime = post.PostTime,
- 
-            }).ToList();
+                Id = topic.Id,
+                Name = topic.Name,
+                Description = topic.Description,
+                Posts = topic.Posts.ToList()
+            };
 
             ViewBag.SomeVariable = id;
 
-            return View(postViewModels);
+            return View(topicViewModel);
         }
 
         public IActionResult CreatePost(int id)
@@ -53,10 +53,11 @@ namespace GroupProj1Weddit.Controllers
 
             var createPostViewModel = new CreatePostViewModel
             {
-                TopicId = topic.Id
+				TopicId = topic.Id
             };
-
-            ViewBag.SomeVariable = id;
+			Console.WriteLine(createPostViewModel.TopicId);
+			Console.WriteLine(topic.Id);
+			ViewBag.SomeVariable = id;
 
             return View(createPostViewModel);
         }
@@ -64,7 +65,7 @@ namespace GroupProj1Weddit.Controllers
         [HttpPost]
         public IActionResult CreatePost(CreatePostViewModel createPostViewModel)
         {
-            if (ModelState.IsValid)
+			if (ModelState.IsValid)
             {
                 var user = _userManager.GetUserAsync(User).Result; // Retrieve current user
                 if (user != null)
@@ -76,26 +77,15 @@ namespace GroupProj1Weddit.Controllers
                         Description = createPostViewModel.Description,
                         PostTime = DateTime.Now,
                         User = user,
+                        TopicId = createPostViewModel.TopicId
                     };
-
-                    // Set the TopicId based on the selected topic
-                    if (createPostViewModel.TopicId > 0) // Check if a valid TopicId is provided
-                    {
-                        // Retrieve the Topic from the database based on the provided TopicId
-                        var topic = _context.Topics.Find(createPostViewModel.TopicId);
-
-                        if (topic != null)
-                        {
-                            post.Topic = topic;
-                        }
-                    }
-
+                    Console.WriteLine(post.TopicId);
                     // Save the post to the database
                     _context.Posts.Add(post);
                     _context.SaveChanges();
 
        
-                    return RedirectToAction("Index", new { id = post.Topic.Id });
+                    return RedirectToAction("Index", new { id = post.TopicId });
                 }
             }
             return View(createPostViewModel);

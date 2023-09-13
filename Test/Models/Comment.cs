@@ -11,7 +11,8 @@ namespace GroupProj1Weddit.Models
 
 
         public virtual IdentityUser User { get; set; }
-        public virtual Post Post { get; set; }
-        
-    }
+		[ForeignKey("Posts")]
+		public int PostId { get; set; }
+
+	}
 }

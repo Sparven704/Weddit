@@ -27,8 +27,8 @@ namespace GroupProj1Weddit.Controllers
             {
                 return NotFound();
             }
-
-            return View(post);
+			ViewBag.SomeVariable = id;
+			return View(post);
         }
 
         public IActionResult CreateComment(int id)
@@ -40,43 +40,45 @@ namespace GroupProj1Weddit.Controllers
                 return NotFound();
             }
 
-            var commentViewModel = new CommentViewModel
-            {
+            var createCommentViewModel = new CreateCommentViewModel
+			{
                 PostId = post.Id
             };
 
-            return View(commentViewModel);
+            ViewBag.SomeVariable = id;
+            return View(createCommentViewModel);
         }
 
         [HttpPost]
-        public IActionResult CreateComment(CommentViewModel commentViewModel)
+        public IActionResult CreateComment(CreateCommentViewModel createCommentViewModel)
         {
             if (ModelState.IsValid)
             {
                 var user = _userManager.GetUserAsync(User).Result;
                 if (user != null)
                 {
-                    var post = _context.Posts.FirstOrDefault(p => p.Id == commentViewModel.PostId);
+                    var post = _context.Posts.Include(p => p.Comments).FirstOrDefault(p => p.Id == createCommentViewModel.PostId);
 
                     if (post != null)
                     {
                         var comment = new Comment
                         {
-                            Content = commentViewModel.Content,
+                            Content = createCommentViewModel.Content,
                             CommentTime = DateTime.Now,
                             User = user,
+                            PostId = createCommentViewModel.PostId
                         };
 
-                        post.Comments.Add(comment); // Associate the comment with the post
-
+                        _context.Comments.Add(comment);
                         _context.SaveChanges();
 
-                        return RedirectToAction("Index", new { id = commentViewModel.PostId });
+                        return RedirectToAction("Index", new { id = createCommentViewModel.PostId });
                     }
                 }
             }
 
-            return View(commentViewModel);
+            return View(createCommentViewModel);
         }
+
     }
 }

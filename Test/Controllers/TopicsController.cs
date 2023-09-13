@@ -1,10 +1,6 @@
-﻿using GroupProj1Weddit.Models;
-using GroupProj1Weddit.Models.ViewModels;
-using Microsoft.AspNetCore.Identity;
+﻿using GroupProj1Weddit.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using System.Security.Claims;
 using Test.Data;
 using Test.Models;
 
@@ -24,15 +20,14 @@ namespace Test.Controllers
 
         public IActionResult Index()
         {
-            List<TopicViewModel> topicViewModels = _context.Topics
-            .Select(topic => new TopicViewModel
-            {
-                Id = topic.Id,
-                Name = topic.Name,
-                Description = topic.Description,
-                Posts = topic.Posts
-            })
-            .ToList();
+            List<TopicViewModel> topicViewModels = _context.Topics.Select(topic => new TopicViewModel
+           {
+               Id = topic.Id,
+               Name = topic.Name,
+               Description = topic.Description,
+               Posts = topic.Posts
+           })
+           .ToList();
 
             return View(topicViewModels);
         }

@@ -12,8 +12,9 @@ namespace GroupProj1Weddit.Models
         
         
         public virtual IdentityUser User { get; set; }
-        public virtual Topic Topic { get; set; }
-        public virtual ICollection<Comment>? Comments { get; set; }
+		[ForeignKey("Topic")]
+		public int TopicId { get; set; }
+		public virtual ICollection<Comment>? Comments { get; set; }
 
     }
 }
