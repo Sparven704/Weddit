@@ -1,15 +1,14 @@
 ﻿@model GroupProj1Weddit.Models.ViewModels.CreateCommentViewModel;
 @using System.Security.Claims;
 @{
-    int someVariable = (int)ViewBag.SomeVariable;
-}
-@{
     ViewData["Title"] = "CreateComment";
 }
 
+
+
 <h1>Post a Comment here</h1>
 
-<a href="@Url.Action("Index", "Comments", new { id = ViewBag.someVariable})" class="btn btn-primary">Return to Comments</a>
+<a href="@Url.Action("Index", "Comments", new { id = @Model.PostId})" class="btn btn-primary">Return to Comments</a>
 
 <form id="createCommentForm" asp-controller="Comments" asp-action="CreateComment" method="post" style="display:block;">
     <input type="hidden" asp-for="PostId" value="@Model.PostId" />

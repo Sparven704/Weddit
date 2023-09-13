@@ -1,33 +1,28 @@
-﻿@model GroupProj1Weddit.Models.Post;
+﻿@model GroupProj1Weddit.Models.ViewModels.PostsViewModel
 
-
-@{
-	int someVariable = (int)ViewBag.SomeVariable;
-}
-
-
-
-@if (Model.Comments != null)
+@if (Model.Post.Comments != null && Model.Post.Comments.Any())
 {
-<ul>
-	@foreach (var comment in Model.Comments)
-	{
-	  <li>@comment.Content</li>	
-	}
-</ul>
-
-<button id="ToCreateComment" class="btn btn-primary" onclick="redirectToCreateComment(@Model.Id)">Post a comment</button>
-	<a href="@Url.Action("Index", "Posts", new { id = @Model.Id})" class="btn btn-primary">Return to Posts</a>
-
-<script>
-		function redirectToCreateComment(postId) {
-			var url = '@Url.Action("CreateComment", "Comments")' + '?id=' + postId;
-		window.location.href = url;
-	}
-</script>
+    <ul>
+        @foreach (var comment in Model.Comments)
+        {
+            <li>
+                <strong>@comment.UserName</strong> (@comment.CommentTime):
+                @comment.Content
+            </li>
+        }
+    </ul>
 }
 else
 {
-	<p>No one has commented yet. Be the first one!</p>
-	<button id="ToCreateComment" class="btn btn-primary" onclick="redirectToCreateComment(postId)">Post a comment</button>
+    <p>No one has commented yet. Be the first one!</p>
 }
+
+<button id="ToCreateComment" class="btn btn-primary" onclick="redirectToCreateComment(@Model.Post.Id)">Post a comment</button>
+<a href="@Url.Action("Index", "Posts", new { id = Model.Post.TopicId })" class="btn btn-primary">Return to Posts</a>
+
+<script>
+    function redirectToCreateComment(postId) {
+        var url = '@Url.Action("CreateComment", "Comments")' + '?id=' + postId;
+        window.location.href = url;
+    }
+</script>

@@ -6,13 +6,11 @@
 @{
     ViewData["Title"] = "CreatePost";
 }
-@{
-    int someVariable = (int)ViewBag.SomeVariable;
-}
+
+
 <h1>Create Post here</h1>
 
-<a href="@Url.Action("Index", "Posts", new { id = ViewBag.someVariable})" class="btn btn-primary">Return to Posts</a>
- 
+<a href="@Url.Action("Index", "Posts", new { id = Model.TopicId})" class="btn btn-primary">Return to Posts</a>
 
 
 <form id="createPostForm" asp-controller="Posts" asp-action="CreatePost" method="post" style="display:block;">

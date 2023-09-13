@@ -38,8 +38,6 @@ namespace GroupProj1Weddit.Controllers
                 Posts = topic.Posts.ToList()
             };
 
-            ViewBag.SomeVariable = id;
-
             return View(topicViewModel);
         }
 
@@ -53,18 +51,21 @@ namespace GroupProj1Weddit.Controllers
 
             var createPostViewModel = new CreatePostViewModel
             {
-				TopicId = topic.Id
+                TopicId = topic.Id
             };
-			Console.WriteLine(createPostViewModel.TopicId);
-			Console.WriteLine(topic.Id);
-			ViewBag.SomeVariable = id;
+            Console.WriteLine(createPostViewModel.TopicId);
+            Console.WriteLine(topic.Id);
+
 
             return View(createPostViewModel);
         }
 
+
+
         [HttpPost]
         public IActionResult CreatePost(CreatePostViewModel createPostViewModel)
         {
+		
 			if (ModelState.IsValid)
             {
                 var user = _userManager.GetUserAsync(User).Result; // Retrieve current user

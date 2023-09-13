@@ -20,18 +20,32 @@ namespace GroupProj1Weddit.Controllers
             _context = context;
             _userManager = userManager;
         }
-        public IActionResult Index(int id)
-        {
-            var post = _context.Posts.Include(p => p.Comments).FirstOrDefault(p => p.Id == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-			ViewBag.SomeVariable = id;
-			return View(post);
-        }
+		public IActionResult Index(int id)
+		{
+			var post = _context.Posts.Include(p => p.Comments).FirstOrDefault(p => p.Id == id);
+			if (post == null)
+			{
+				return NotFound();
+			}
+            var user = _userManager.GetUserAsync(User).Result;
+            // Create a list of CommentViewModel objects
+            var commentViewModels = post.Comments.Select(comment => new CommentViewModel
+			{ 
+                Content = comment.Content,
+				UserName = user.UserName,
+				CommentTime = comment.CommentTime
+			}).ToList();
 
-        public IActionResult CreateComment(int id)
+			var model = new PostsViewModel
+			{
+				Post = post,
+				Comments = commentViewModels
+			};
+
+			return View(model);
+		}
+
+		public IActionResult CreateComment(int id)
         {
             // Retrieve the post based on the id parameter
             var post = _context.Posts.FirstOrDefault(p => p.Id == id);
@@ -41,13 +55,13 @@ namespace GroupProj1Weddit.Controllers
             }
 
             var createCommentViewModel = new CreateCommentViewModel
-			{
+            {
                 PostId = post.Id
             };
 
-            ViewBag.SomeVariable = id;
             return View(createCommentViewModel);
         }
+
 
         [HttpPost]
         public IActionResult CreateComment(CreateCommentViewModel createCommentViewModel)
