@@ -7,9 +7,9 @@
 <h2>@Model.Name</h2>
 <p>@Model.Description</p>
 
-<h3>Posts in this Topic</h3>
+<h3 style="color: white;">Posts in this Topic</h3>
 
-@*Loops through all post objects in the selected topic and prints them out as links*@
+
 @if (Model.Posts != null)
 {
     <table class="table">
@@ -18,22 +18,32 @@
             {
                 <tr>
                     <td>
-                        <a href="@Url.Action("Index", "Comments", new { id = post.Id })">@post.Title</a> 
+                        <a href="@Url.Action("Index", "Comments", new { id = post.Id })"
+                           style="text-decoration: none; color: #ff5733;"
+                           onmouseover="this.style.color='#00ff00';"
+                           onmouseout="this.style.color='#ff5733';"
+                           onclick="this.style.color='#00ff00';">
+                            <strong>@post.Title</strong>
+                        </a>
+                        <br /> 
+
+                        <small style="color: white;">@post.Description</small>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 
-    <button id="ToCreatePost" class="btn btn-primary" onclick="redirectToCreatePost(@Model.Id)">Go to create post</button>
+
+    <button id="ToCreatePost" class="btn btn-primary" onclick="redirectToCreatePost(@Model.Id)">Create a new post</button>
 }
 else
 {
     <p>No posts available.</p> 
-    <button id="ToCreatePost" class="btn btn-primary" onclick="redirectToCreatePost(@Model.Id)">Go to create post</button>
+    <button id="ToCreatePost" class="btn btn-primary" onclick="redirectToCreatePost(@Model.Id)">Create a new post</button>
 
 }
-<a href="@Url.Action("Index", "Topics")" class="btn btn-primary">Return to Topics</a>
+<a href="@Url.Action("Index", "Topics")" class="btn btn-primary" style="text-decoration: none; color: white;">Return to Topics</a>
 <script>
     function redirectToCreatePost(TopicId) {
         var url = '@Url.Action("CreatePost", "Posts")' + '?id=' + @Model.Id;

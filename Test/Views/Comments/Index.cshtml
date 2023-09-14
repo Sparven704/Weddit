@@ -2,10 +2,10 @@
 
 @if (Model.Post.Comments != null && Model.Post.Comments.Any())
 {
-    <ul>
+    <ul style="padding-top: 2rem; padding-bottom: 2rem;">
         @foreach (var comment in Model.Comments)
         {
-            <li>
+            <li style="color: white; padding-top: 10px;">
                 <strong>@comment.UserName</strong> (@comment.CommentTime):
                 @comment.Content
             </li>
@@ -14,11 +14,11 @@
 }
 else
 {
-    <p>No one has commented yet. Be the first one!</p>
+    <p style="padding-top: 2rem; padding-bottom: 2rem; font-weight: bold;">No one has commented yet. Be the first one!</p>
 }
 
 <button id="ToCreateComment" class="btn btn-primary" onclick="redirectToCreateComment(@Model.Post.Id)">Post a comment</button>
-<a href="@Url.Action("Index", "Posts", new { id = Model.Post.TopicId })" class="btn btn-primary">Return to Posts</a>
+<a href="@Url.Action("Index", "Posts", new { id = Model.Post.TopicId })" class="btn btn-primary" style="text-decoration: none; color: white;">Return to Posts</a>
 
 <script>
     function redirectToCreateComment(postId) {

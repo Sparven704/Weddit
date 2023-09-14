@@ -72,7 +72,7 @@ namespace GroupProj1Weddit.Controllers
                 var user = _userManager.GetUserAsync(User).Result; // Retrieve current user
                 if (user != null)
                 {
-                    // Map CreatePostViewModel to Post
+                    // Maps ViewModel to model
                     var post = new Post
                     {
                         Title = createPostViewModel.Title,

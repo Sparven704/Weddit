@@ -1,6 +1,5 @@
 ﻿@using GroupProj1Weddit.Models.ViewModels;
 @model List<TopicViewModel>
-
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -17,7 +16,13 @@
         {
             <tr>
                 <td>
-                    <a href="@Url.Action("Index", "Posts", new { id = topic.Id })">@topic.Name</a>
+                    <a href="@Url.Action("Index", "Posts", new { id = topic.Id })"
+                       style="text-decoration: none; color: #ff5733;"
+                       onmouseover="this.style.color='#00ff00';"
+                       onmouseout="this.style.color='#ff5733';"
+                       onclick="this.style.color='#00ff00';">
+                        @topic.Name
+                    </a>
                 </td>
                 <td id="topic-description">@topic.Description</td>
             </tr>

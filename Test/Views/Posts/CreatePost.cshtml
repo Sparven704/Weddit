@@ -11,7 +11,7 @@
 <h1>Create Post here</h1>
 
 @*--Button to return user to all posts in selected topic--*@
-<a href="@Url.Action("Index", "Posts", new { id = Model.TopicId})" class="btn btn-primary">Return to Posts</a>
+<a href="@Url.Action("Index", "Posts", new { id = Model.TopicId})" class="btn btn-primary" style="text-decoration: none; color: white;">Return to Posts</a>
 
 @*--Form for creating a new Post on selected topic--*@
 <form id="createPostForm" asp-controller="Posts" asp-action="CreatePost" method="post" style="display:block;">
