@@ -53,8 +53,7 @@ To run the application, clone or fork the project then:
 
 - create DB migration ``` add-migration <MigrationName> ```
 - update the DB ``` database-update ```
-- Create dummy Topics using SQL query ```INSERT INTO topics (Name, Description)
-VALUES
+- Create dummy Topics using SQL query ```INSERT INTO topics (Name, Description) VALUES
     ('Topic 1', 'Description for Topic 1'),
     ('Topic 2', 'Description for Topic 2'),
     ('Topic 3', 'Description for Topic 3');```
