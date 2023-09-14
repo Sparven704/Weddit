@@ -20,35 +20,37 @@ namespace GroupProj1Weddit.Controllers
             _context = context;
             _userManager = userManager;
         }
-		public IActionResult Index(int id)
-		{
-            // Retrieves post with matching id and loads in all associated comments to memory
-			var post = _context.Posts.Include(p => p.Comments).FirstOrDefault(p => p.Id == id);
-			if (post == null)
-			{
-				return NotFound();
-			}
+        public IActionResult Index(int id)
+        {
+            // Retrieves post with matching id and loads in all associated comments and user data to memory
+            var post = _context.Posts
+                .Include(p => p.Comments)
+                .ThenInclude(c => c.User)
+                .FirstOrDefault(p => p.Id == id);
 
-            var user = _userManager.GetUserAsync(User).Result; // Retrieve current user
+            if (post == null)
+            {
+                return NotFound();
+            }
 
             // Create a list of CommentViewModel objects
             var commentViewModels = post.Comments.Select(comment => new CommentViewModel
-			{ 
+            {
                 Content = comment.Content,
-				UserName = user.UserName,
-				CommentTime = comment.CommentTime
-			}).ToList();
+                UserName = comment.User?.UserName, // Use ?. to handle potential null User
+                CommentTime = comment.CommentTime
+            }).ToList();
 
-			var model = new PostsViewModel
-			{
-				Post = post,
-				Comments = commentViewModels
-			};
+            var model = new PostsViewModel
+            {
+                Post = post,
+                Comments = commentViewModels
+            };
 
-			return View(model);
-		}
+            return View(model);
+        }
 
-		public IActionResult CreateComment(int id)
+        public IActionResult CreateComment(int id)
         {
             // Retrieve the post based on the id
             var post = _context.Posts.FirstOrDefault(p => p.Id == id);
